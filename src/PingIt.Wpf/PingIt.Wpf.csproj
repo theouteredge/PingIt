@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>0b9549fa-37af-4cac-a1c7-ce8aa5c7837e</ProjectGuid>
+    <ProjectGuid>{A2DB464D-157F-41C1-9E27-C33AE130E6F4}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PingIt.Wpf</RootNamespace>
@@ -51,7 +51,11 @@
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\DisplayHostViewModel.cs" />
+    <Compile Include="ViewModels\HostViewModel.cs" />
+    <Compile Include="ViewModels\ResponseGraphViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -88,6 +92,12 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PingIt.Domain\PingIt.Domain.csproj">
+      <Project>{A8C08AC3-5411-4B47-A18F-253A70663251}</Project>
+      <Name>PingIt.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

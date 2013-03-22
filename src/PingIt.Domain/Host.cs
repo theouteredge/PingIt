@@ -91,7 +91,7 @@ namespace PingIt.Domain
             return null;
         }
 
-        public int? RecentResponseTime()
+        public int? AverageResponseTimeRecent()
         {
             var history = PingHistory.Where(x => x.PingedAt >= DateTime.Now.AddMinutes(-10) && x.Status == PingStatus.Up).ToList();
             if (history.Count > 0)
