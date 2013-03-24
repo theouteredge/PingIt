@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Threading;
 using PingIt.Domain;
 using PingIt.Domain.Services;
 
 namespace PingIt.Wpf.ViewModels
 {
-    public class HostViewModel
+    public class HostViewModel : ViewModelBase
     {
         private readonly HostService _service;
 
@@ -17,10 +18,11 @@ namespace PingIt.Wpf.ViewModels
         public int Port { get; set; }
         public int PingEvery { get; set; }
 
-
-        public HostViewModel(HostService service)
+        public HostViewModel(){}
+        public HostViewModel(Dispatcher dispatcher, HostService service) : base(dispatcher)
         {
             _service = service;
+            PingEvery = 500;
         }
 
 

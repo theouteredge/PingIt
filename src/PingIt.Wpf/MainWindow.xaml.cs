@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PingIt.Domain.Respository;
 using PingIt.Domain.Services;
 using PingIt.Wpf.ViewModels;
 
@@ -22,25 +23,23 @@ namespace PingIt.Wpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        readonly HostService _service = new HostService();
-        
-        readonly ObservableCollection<DisplayHostViewModel> _listModels = new ObservableCollection<DisplayHostViewModel>();
-        readonly HostViewModel _host;
+        readonly HostService _service;
+        readonly MainWindowViewModel _model;
         
 
         public MainWindow()
         {
             InitializeComponent();
-            _host = new HostViewModel(_service);
+            
+            _service = new HostService(new HostRepository());
+            _model = new MainWindowViewModel(Dispatcher, _service, new HostRepository());
 
-            DataContext = _host;
-            HostList.DataContext = _listModels;
+            DataContext = _model;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var host = _host.Save();
-            _listModels.Add(new DisplayHostViewModel(host));
+            _model.Save();
         }
     }
 }
