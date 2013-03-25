@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:chartingprimitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         Title="PING IT"
         Height="434" 
         Width="915"
@@ -56,7 +58,34 @@
 
                                 <StackPanel Grid.Column="0">
                                     <TextBlock Text="{Binding Name}" Style="{StaticResource AppTextDark}" />
-                                    <TextBlock Text="{Binding LastMessage}" Style="{StaticResource AppTextDark}" />
+
+                                    <chartingToolkit:Chart HorizontalAlignment="Left" Margin="0,0,0,0" Name="chart1" 
+                                                           VerticalAlignment="Top" Height="75" Width="150">
+
+                                        <chartingToolkit:Chart.Axes>
+                                            <chartingToolkit:LinearAxis Orientation="X"></chartingToolkit:LinearAxis>
+                                            <chartingToolkit:LinearAxis Orientation="Y"></chartingToolkit:LinearAxis>
+                                        </chartingToolkit:Chart.Axes>
+
+                                        <chartingToolkit:Chart.Template>
+                                            <ControlTemplate TargetType="chartingToolkit:Chart">
+                                                <Border Background="{StaticResource AppDarkBrush01}" BorderBrush="Transparent" BorderThickness="0" Padding="0">
+                                                    <Grid Margin="0">
+                                                        <chartingprimitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
+                                                            <Grid Canvas.ZIndex="-1" Style="{TemplateBinding PlotAreaStyle}" Background="{StaticResource AppDarkBrush01}" />
+                                                            <Border Canvas.ZIndex="10" BorderBrush="#FF919191" BorderThickness="1" />
+                                                        </chartingprimitives:EdgePanel>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </chartingToolkit:Chart.Template>
+
+                                        <chartingToolkit:LineSeries ItemsSource="{Binding AverageGraphModel}" 
+                                                                    IndependentValueBinding="{Binding Path=Time}"
+                                                                    DependentValueBinding="{Binding Path=Duration}">
+                                            
+                                        </chartingToolkit:LineSeries>
+                                    </chartingToolkit:Chart>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1">
