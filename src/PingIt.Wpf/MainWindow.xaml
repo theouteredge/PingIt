@@ -3,20 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        Title="Ping It" Height="434.25" Width="915"
+        Title="PING IT"
+        Height="434" 
+        Width="915"
         mc:Ignorable="d"
         d:DataContext="{d:DesignData Source=HostListViewModel.xaml}"
+        Style="{StaticResource MetroStyle}"
         >
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="293*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="223*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
         </Grid.ColumnDefinitions>
-
-        <Rectangle Fill="{StaticResource AppChromeDarkBrush}" Height="59" Stroke="Black" VerticalAlignment="Top" Grid.Row="0" />
 
 
         <!-- CREATE NEW HOST FORM -->
@@ -35,8 +37,7 @@
 
 
         <!-- LIST ALL HOSTS AND THERE STATUS -->
-        <ListBox x:Name="HostList" ItemsSource="{Binding ListViewModel.Items}" Grid.Row="1" 
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <ListBox x:Name="HostList" ItemsSource="{Binding ListViewModel.Items}" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.RowSpan="2">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel />
@@ -45,34 +46,35 @@
 
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid Width="250" Height="100">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="100"/>
-                        </Grid.ColumnDefinitions>
+                    <Grid Margin="0,0,5,5">
+                        <Border  Style="{StaticResource MediumPingTileBorder}">
+                            <Grid Style="{StaticResource MediumPingTile}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
 
-                        <Rectangle Grid.ColumnSpan="2" Fill="{StaticResource AppChromeDarkBrush}" />
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{Binding Name}" Style="{StaticResource AppTextDark}" />
+                                    <TextBlock Text="{Binding LastMessage}" Style="{StaticResource AppTextDark}" />
+                                </StackPanel>
 
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="{Binding Name}" Style="{StaticResource AppTextDark}" />
-                            <TextBlock Text="{Binding LastMessage}" Style="{StaticResource AppTextDark}" />
-                        </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{Binding Status}" Style="{StaticResource AppTextDarkHuge}" Foreground="{Binding StatusFillColor}" HorizontalAlignment="Right" />
 
-
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="{Binding Status}" Style="{StaticResource AppTextDarkHuge}" Foreground="{Binding StatusFillColor}" HorizontalAlignment="Right" />
-
-                            <StackPanel  Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
-                                <TextBlock Text="Avg." Style="{StaticResource AppTextDark}" Margin="2" />
-                                <TextBlock Text="{Binding AveragePingTime}"  Style="{StaticResource AppTextBad}" Foreground="{Binding AveragePingTimeFillColor}" Margin="2,2,0,2" />
-                                <TextBlock Text="ms" Style="{StaticResource AppTextDarkAccent}" Margin="0,2,2,2" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
-                                <TextBlock Text="last" Style="{StaticResource AppTextDark}"  Margin="2" />
-                                <TextBlock Text="{Binding LastPingTime}" Style="{StaticResource AppTextGood}" Foreground="{Binding LastPingTimeFillColor}" Margin="2,2,0,2" />
-                                <TextBlock Text="ms" Style="{StaticResource AppTextDarkAccent}" Margin="0,2,2,2" />
-                            </StackPanel>
-                        </StackPanel>
+                                    <StackPanel  Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
+                                        <TextBlock Text="Avg." Style="{StaticResource AppTextDark}" Margin="2" />
+                                        <TextBlock Text="{Binding AveragePingTime}"  Style="{StaticResource AppTextBad}" Foreground="{Binding AveragePingTimeFillColor}" Margin="2,2,0,2" />
+                                        <TextBlock Text="ms" Style="{StaticResource AppTextDarkAccent}" Margin="0,2,2,2" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
+                                        <TextBlock Text="last" Style="{StaticResource AppTextDark}"  Margin="2" />
+                                        <TextBlock Text="{Binding LastPingTime}" Style="{StaticResource AppTextGood}" Foreground="{Binding LastPingTimeFillColor}" Margin="2,2,0,2" />
+                                        <TextBlock Text="ms" Style="{StaticResource AppTextDarkAccent}" Margin="0,2,2,2" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

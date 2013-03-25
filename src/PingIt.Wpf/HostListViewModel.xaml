@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:viewModels="clr-namespace:PingIt.Wpf.ViewModels">
 
-    <!--
-    <viewModels:MainWindowViewModel.ListViewModel>
+
+    <!--<viewModels:MainWindowViewModel.ListViewModel>
         <viewModels:HostListViewModel>
             <viewModels:HostListViewModel.Items>
                 <viewModels:HostListItemViewModel>
@@ -18,6 +18,5 @@
                 </viewModels:HostListItemViewModel>
             </viewModels:HostListViewModel.Items>
         </viewModels:HostListViewModel>
-    </viewModels:MainWindowViewModel.ListViewModel>
-    -->
+    </viewModels:MainWindowViewModel.ListViewModel>-->
 </viewModels:MainWindowViewModel>

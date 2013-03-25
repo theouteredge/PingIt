@@ -12,8 +12,17 @@
     <SolidColorBrush x:Key="AppTextDarkBrush" Color="#FFF9F9F9" />
     
     <SolidColorBrush x:Key="AppChromeBrush" Color="#FFF9F9F9" />
-    <SolidColorBrush x:Key="AppChromeDarkBrush" Color="#FF292929" />
+    <SolidColorBrush x:Key="AppChromeDarkBrush" Color="#FF2D2D30" />
+
+    <SolidColorBrush x:Key="AppDarkBrush01" Color="#FF171717" />
+    <SolidColorBrush x:Key="AppDarkBrush02" Color="#FF2D2D30" />
+    <SolidColorBrush x:Key="AppDarkBrush03" Color="#FF252525" />
+    <SolidColorBrush x:Key="AppDarkBrush04" Color="#FF292929" />
+    
+    
     <SolidColorBrush x:Key="AppSubtitleBrush" Color="#FF98A0A0" />
+    <SolidColorBrush x:Key="AppDarkSubtitleBrush" Color="#FF665A4E" />
+    
 
 
 
@@ -56,4 +65,8 @@
     </Style>
 
 
+    <Style TargetType="ListBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
 </ResourceDictionary>

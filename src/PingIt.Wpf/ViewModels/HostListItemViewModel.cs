@@ -76,7 +76,17 @@ namespace PingIt.Wpf.ViewModels
 
         public PingStatus Status
         {
-            get { return _host.PingHistory.Any() ? _host.PingHistory.Last().Status : PingStatus.Down; }
+            get
+            {
+                try
+                {
+                    return _host.PingHistory.Any() ? _host.PingHistory.Last().Status : PingStatus.Down;
+                }
+                catch (Exception)
+                {
+                    return PingStatus.Down;
+                }
+            }
             set
             {
                 if (_host == null)
@@ -90,7 +100,17 @@ namespace PingIt.Wpf.ViewModels
 
         public string LastMessage
         {
-            get { return _host.PingHistory.Any() ? _host.PingHistory.Last().Message : ""; }
+            get
+            {
+                try
+                {
+                    return _host.PingHistory.Any() ? _host.PingHistory.Last().Message : "";
+                }
+                catch
+                {
+                    return null;
+                }
+            }
         }
 
 
@@ -108,7 +128,17 @@ namespace PingIt.Wpf.ViewModels
 
         public string LastPingTime
         {
-            get { return _host.PingHistory.Any() ? string.Format("{0:0,0}", _host.PingHistory.Last().Duration) : "n/a"; }
+            get
+            {
+                try
+                {
+                    return _host.PingHistory.Any() ? string.Format("{0:0,0}", _host.PingHistory.Last().Duration) : "n/a";
+                }
+                catch
+                {
+                    return "n/a";
+                }
+            }
         }
 
         public SolidColorBrush LastPingTimeFillColor

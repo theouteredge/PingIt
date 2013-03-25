@@ -30,6 +30,11 @@ namespace PingIt.Wpf
         public MainWindow()
         {
             InitializeComponent();
+
+            this.CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, this.OnCloseWindow));
+            this.CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, this.OnMaximizeWindow, this.OnCanResizeWindow));
+            this.CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, this.OnMinimizeWindow, this.OnCanMinimizeWindow));
+            this.CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, this.OnRestoreWindow, this.OnCanResizeWindow));
             
             _service = new HostService(new HostRepository());
             _model = new MainWindowViewModel(Dispatcher, _service, new HostRepository());
@@ -40,6 +45,37 @@ namespace PingIt.Wpf
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             _model.Save();
+        }
+
+
+        private void OnCanResizeWindow(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = this.ResizeMode == ResizeMode.CanResize || this.ResizeMode == ResizeMode.CanResizeWithGrip;
+        }
+
+        private void OnCanMinimizeWindow(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = this.ResizeMode != ResizeMode.NoResize;
+        }
+
+        private void OnCloseWindow(object target, ExecutedRoutedEventArgs e)
+        {
+            SystemCommands.CloseWindow(this);
+        }
+
+        private void OnMaximizeWindow(object target, ExecutedRoutedEventArgs e)
+        {
+            SystemCommands.MaximizeWindow(this);
+        }
+
+        private void OnMinimizeWindow(object target, ExecutedRoutedEventArgs e)
+        {
+            SystemCommands.MinimizeWindow(this);
+        }
+
+        private void OnRestoreWindow(object target, ExecutedRoutedEventArgs e)
+        {
+            SystemCommands.RestoreWindow(this);
         }
     }
 }
