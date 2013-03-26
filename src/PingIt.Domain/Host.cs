@@ -28,7 +28,7 @@ namespace PingIt.Domain
 
         [DataMember]
         public PingStatus Status { get; set; }
-        
+
         public List<PingHistory> PingHistory { get; set; }
 
 
@@ -81,10 +81,10 @@ namespace PingIt.Domain
                     if (reply.Status == IPStatus.Success)
                     {
                         Status = PingStatus.Up;
-                        PingHistory.Add(new PingHistory
+                        AddPingHistory(new PingHistory
                             {
-                                PingedAt = DateTime.Now, 
-                                Duration = reply.RoundtripTime, 
+                                PingedAt = DateTime.Now,
+                                Duration = reply.RoundtripTime,
                                 Status = PingStatus.Up,
                                 Message = Encoding.UTF8.GetString(reply.Buffer)
                             });
@@ -99,8 +99,22 @@ namespace PingIt.Domain
                 Status = PingStatus.Down;
             }
 
-            PingHistory.Add(new PingHistory { PingedAt = DateTime.Now, Duration = 0, Status = PingStatus.Down });
+            AddPingHistory(new PingHistory { PingedAt = DateTime.Now, Duration = 0, Status = PingStatus.Down });
             return false;
+        }
+
+        readonly object _pingHistoryLock = new object();
+        private void AddPingHistory(PingHistory pingHistory)
+        {
+            lock (_pingHistoryLock)
+                PingHistory.Add(pingHistory);
+        }
+
+
+        public PingHistory LastPingHistory()
+        {
+            lock (_pingHistoryLock)
+                return PingHistory.Any() ? PingHistory.Last() : null;
         }
 
 
@@ -108,7 +122,11 @@ namespace PingIt.Domain
         {
             try
             {
-                var history = PingHistory.Where(x => x.Status == PingStatus.Up).ToList();
+                List<PingHistory> history;
+
+                lock (_pingHistoryLock) 
+                    history = PingHistory.Where(x => x.Status == PingStatus.Up).ToList();
+
                 if (history.Count > 0)
                     return Convert.ToInt32(history.Average(x => x.Duration));
 
@@ -124,7 +142,11 @@ namespace PingIt.Domain
         {
             try
             {
-                var history = PingHistory.Where(x => x.PingedAt >= DateTime.Now.AddMinutes(-10) && x.Status == PingStatus.Up).ToList();
+                List<PingHistory> history;
+
+                lock (_pingHistoryLock)
+                    history = PingHistory.Where(x => x.PingedAt >= DateTime.Now.AddMinutes(-10) && x.Status == PingStatus.Up).ToList();
+
                 if (history.Count > 0)
                     return Convert.ToInt32(history.Average(x => x.Duration));
 

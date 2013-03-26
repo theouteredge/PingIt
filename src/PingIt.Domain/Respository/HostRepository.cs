@@ -49,7 +49,7 @@ namespace PingIt.Domain.Respository
 
         private void WriteToFile()
         {
-            var json = _store.ToJson();
+            var json = _store.Dump();
             File.WriteAllText(FILE_NAME, json);
         }
     }

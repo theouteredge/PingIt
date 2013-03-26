@@ -9,26 +9,19 @@ namespace PingIt.Wpf.ViewModels
 {
     public class ResponseGraphViewModel : ViewModelBase
     {
-        private int _duration;
-        private long _time;
+        public int AvgDuration { get; set; }
+        public long LastDuration { get; set; }
 
-        public int Duration
-        {
-            get { return _duration; }
-            set { _duration = value; }
-        }
-        public long Time
-        {
-            get { return _time; }
-            set { _time = value; }
-        }
+        public long Time { get; set; }
 
 
         public ResponseGraphViewModel() { }
-        public ResponseGraphViewModel(int? duration, long time) : base(null)
+        public ResponseGraphViewModel(int? duration, long last, long time) : base(null)
         {
-            _duration = duration == null ? 0 : duration.Value;
-            _time = time;
+            AvgDuration = duration == null ? 0 : duration.Value;
+            LastDuration = last;
+
+            Time = time;
         }
     }
 }

@@ -13,11 +13,11 @@ namespace PingIt.Wpf.ViewModels
     public class HostListItemViewModel : ViewModelBase
     {
         private Host _host;
-        private List<ResponseGraphViewModel> _recentGraphData;
+        private List<ResponseGraphViewModel> _graphData;
         private List<ResponseGraphViewModel> _averageGraphData;
         private readonly Timer _timer;
 
-        private const int PRIVATE_GRAPH_SIZE = 50;
+        private const int PRIVATE_GRAPH_SIZE = 100;
 
 
         /// <summary>
@@ -38,18 +38,19 @@ namespace PingIt.Wpf.ViewModels
                         }
                 };
 
-            _recentGraphData = new List<ResponseGraphViewModel>(PRIVATE_GRAPH_SIZE);
+            _graphData = new List<ResponseGraphViewModel>(PRIVATE_GRAPH_SIZE);
             _averageGraphData = new List<ResponseGraphViewModel>(PRIVATE_GRAPH_SIZE);
 
             UpdateGraphData();
         }
 
-        public HostListItemViewModel(Dispatcher dispatcher, Host host) : base(dispatcher)
+        public HostListItemViewModel(Dispatcher dispatcher, Host host)
+            : base(dispatcher)
         {
             _host = host;
             _host.Start();
 
-            _recentGraphData = new List<ResponseGraphViewModel>(PRIVATE_GRAPH_SIZE);
+            _graphData = new List<ResponseGraphViewModel>(PRIVATE_GRAPH_SIZE);
             _averageGraphData = new List<ResponseGraphViewModel>(PRIVATE_GRAPH_SIZE);
 
 
@@ -66,7 +67,7 @@ namespace PingIt.Wpf.ViewModels
             set
             {
                 if (_host == null)
-                    _host = new Host() {Name = value};
+                    _host = new Host() { Name = value };
                 else
                     _host.Name = value;
 
@@ -78,14 +79,8 @@ namespace PingIt.Wpf.ViewModels
         {
             get
             {
-                try
-                {
-                    return _host.PingHistory.Any() ? _host.PingHistory.Last().Status : PingStatus.Down;
-                }
-                catch (Exception)
-                {
-                    return PingStatus.Down;
-                }
+                var history = _host.LastPingHistory();
+                return history == null ? PingStatus.Down : history.Status;
             }
             set
             {
@@ -102,14 +97,8 @@ namespace PingIt.Wpf.ViewModels
         {
             get
             {
-                try
-                {
-                    return _host.PingHistory.Any() ? _host.PingHistory.Last().Message : "";
-                }
-                catch
-                {
-                    return null;
-                }
+                var history = _host.LastPingHistory();
+                return history == null ? "" : history.Message;
             }
         }
 
@@ -130,14 +119,8 @@ namespace PingIt.Wpf.ViewModels
         {
             get
             {
-                try
-                {
-                    return _host.PingHistory.Any() ? string.Format("{0:0,0}", _host.PingHistory.Last().Duration) : "n/a";
-                }
-                catch
-                {
-                    return "n/a";
-                }
+                var history = _host.LastPingHistory();
+                return history == null ? "n/a" : string.Format("{0:0,0}", _host.PingHistory.Last().Duration);
             }
         }
 
@@ -185,43 +168,32 @@ namespace PingIt.Wpf.ViewModels
         }
 
 
-        public List<ResponseGraphViewModel> RecentGraphModel
+        public List<ResponseGraphViewModel> GraphModel
         {
-            get { return _recentGraphData; }
-        }
-        public List<ResponseGraphViewModel> AverageGraphModel
-        {
-            get { return _averageGraphData; }
+            get { return _graphData; }
         }
 
 
         private void UpdateGraphData()
         {
             // if we have more that 50 items in the list, dump the first item from the list so we have space on the end for the next item
-            if (_recentGraphData.Count >= PRIVATE_GRAPH_SIZE)
-                _recentGraphData = _recentGraphData.Skip(1).Take(_recentGraphData.Count).ToList();
+            if (_graphData.Count >= PRIVATE_GRAPH_SIZE)
+                _graphData = _graphData.Skip(1).Take(_graphData.Count).ToList();
 
-            _recentGraphData.Add(new ResponseGraphViewModel(_host.AverageResponseTimeRecent(), DateTime.Now.Ticks));
-
-            // if we have more that 50 items in the list, dump the first item from the list so we have space on the end for the next item
-            if (_averageGraphData.Count >= PRIVATE_GRAPH_SIZE)
-                _averageGraphData = _averageGraphData.Skip(1).Take(_averageGraphData.Count).ToList();
-
-            _averageGraphData.Add(new ResponseGraphViewModel(_host.AverageResponseTime(), DateTime.Now.Ticks));
-
+            var history = _host.LastPingHistory();
+            _graphData.Add(new ResponseGraphViewModel(_host.AverageResponseTimeRecent(), history == null ? 0 : history.Duration, DateTime.Now.Ticks));
 
             RefreshPropertiesOnUI();
         }
 
         private void RefreshPropertiesOnUI()
         {
-            NotifyPropertyChanged("RecentGraphModel");
-            NotifyPropertyChanged("AverageGraphModel");
+            NotifyPropertyChanged("GraphModel");
             NotifyPropertyChanged("AveragePingTimeRecent");
             NotifyPropertyChanged("LastPingTime");
             NotifyPropertyChanged("AveragePingTime");
             NotifyPropertyChanged("Status");
-            
+
             NotifyPropertyChanged("StatusFillColor");
             NotifyPropertyChanged("AveragePingTimeFillColor");
             NotifyPropertyChanged("LastPingTimeFillColor");

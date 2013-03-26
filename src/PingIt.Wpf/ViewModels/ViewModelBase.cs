@@ -141,7 +141,14 @@ namespace PingIt.Wpf.ViewModels
             if (String.IsNullOrEmpty(propertyChanged) || PropertyChanged == null)
                 return;
 
-            InvokeOnUIThread(() => PropertyChanged(this, new PropertyChangedEventArgs(propertyChanged)));
+            InvokeOnUIThread(() =>
+                {
+                    try
+                    {
+                        PropertyChanged(this, new PropertyChangedEventArgs(propertyChanged));
+                    }
+                    catch { }
+                });
         }
     }
 
